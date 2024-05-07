@@ -1,0 +1,47 @@
+.wrapContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.game {
+    display: grid;
+    grid-template-columns: 1fr; /* Each row takes full width */
+    grid-row-gap: 10px; /* Space between rows */
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.box {
+    cursor: pointer;
+    align-content: center;
+    width: 160px; /* Set the width of the box */
+    height: 140px; /* Set the height of the box */
+    display: flex; /* Use flexbox */
+    align-items: center; /* Vertically center the content */
+    justify-content: center; /* Horizontally center the content */
+    margin: 10px; /* Provides spacing around the box */
+}
+
+.connection {
+    margin-top: 20px;
+}
+
+.selected {
+    background-color: lightblue;
+}
+
+.solved {
+    background-color: gray; /* Or any other color that signifies it's solved */
+    pointer-events: none; /* No mouse interaction */
+    color: white; /* Change text color if needed */
+}
