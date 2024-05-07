@@ -1,7 +1,7 @@
 .wrapContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     height: 100vh;
 }
@@ -30,7 +30,45 @@
     align-items: center; /* Vertically center the content */
     justify-content: center; /* Horizontally center the content */
     margin: 10px; /* Provides spacing around the box */
+    font-size: 16px;
 }
+
+/* Responsive styles for devices with a max width of 768px */
+@media (max-width: 768px) {
+    .box {
+        width: 120px;
+        height: 100px;
+        margin: 8px;
+        font-size: 14px;
+    }
+}
+
+/* More responsive styles for smaller devices */
+@media (max-width: 480px) {
+    .box {
+        width: 90px;
+        height: 70px;
+        margin: 5px;
+        font-size: 12px;
+    }
+}
+
+.box .p-card-title {
+    font-size: 28px; /* Default font size */
+}
+
+@media (max-width: 768px) {
+    .box .p-card-title {
+        font-size: 20px; /* Smaller font size */
+    }
+}
+
+@media (max-width: 480px) {
+    .box .p-card-title {
+        font-size: 12px; /* Even smaller font size */
+    }
+}
+
 
 .connection {
     margin-top: 20px;
