@@ -46,7 +46,7 @@
 /* More responsive styles for smaller devices */
 @media (max-width: 480px) {
     .box {
-        width: 90px;
+        width: 84px;
         height: 70px;
         margin: 5px;
         font-size: 12px;

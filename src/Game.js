@@ -78,11 +78,18 @@ const Game = () => {
 
     // Function to handle word selection
     const handleWordClick = (word) => {
-        setSelectedWords(prevState => ({
-            ...prevState,
-            [word]: !prevState[word]
-        }));
+        setSelectedWords(prevState => {
+            const newState = { ...prevState };
+            if (newState[word]) {
+                delete newState[word];  // Remove the word from the state entirely if deselected
+            } else {
+                newState[word] = true;  // Add the word with true if selected
+            }
+            return newState;
+        });
     };
+
+
 
     const [solvedWords, setSolvedWords] = useState([]);
 
@@ -123,7 +130,7 @@ const Game = () => {
         return;
     }
 
-    alert('Incorrect selection or solution! Please try again.');
+    alert('Leider nein, versuch es doch noch ein Mal!');
     setSelectedWords({});
 };
 
@@ -133,6 +140,7 @@ const Game = () => {
     // Update the useEffect dependency to track selectedWords changes
     useEffect(() => {
         setIsButtonDisabled(Object.keys(selectedWords).length !== 4);
+        console.log(Object.keys(selectedWords).length);
     }, [selectedWords]);
 
     return (
@@ -155,12 +163,7 @@ const Game = () => {
                 </div>
             </div>
             <div className="button-container">
-                <button onClick={createConnection} disabled={isButtonDisabled}>Create Connection</button>
-            </div>
-            <div className="connections">
-                {connections.map((connection, index) => (
-                    <Connection key={index} connection={connection.words} solution={connection.solution} />
-                ))}
+                <button onClick={createConnection} disabled={isButtonDisabled}>EINLOGGEN</button>
             </div>
         </div>
     );
