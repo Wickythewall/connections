@@ -33,6 +33,21 @@
     font-size: 16px;
 }
 
+
+.solution {
+    grid-column: 1 / -1; /* Span all columns in the grid row */
+    background-color: #ffc107; /* Example color */
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 20px; /* Larger font size for visibility */
+    z-index: 10; /* Ensure it covers other boxes */
+    width: 700px;
+}
+
+
 /* Responsive styles for devices with a max width of 768px */
 @media (max-width: 768px) {
     .box {
@@ -50,6 +65,20 @@
         height: 70px;
         margin: 5px;
         font-size: 12px;
+    }
+}
+
+/* Responsive styles for devices with a max width of 768px */
+@media (max-width: 768px) {
+    .solution {
+        width: 540px;
+    }
+}
+
+/* More responsive styles for smaller devices */
+@media (max-width: 480px) {
+    .solution {
+        width: 366px;
     }
 }
 
@@ -83,3 +112,19 @@
     pointer-events: none; /* No mouse interaction */
     color: white; /* Change text color if needed */
 }
+
+
+.lives-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.life {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+    margin: 5px;
+}
+

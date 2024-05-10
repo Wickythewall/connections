@@ -4,16 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { Card } from 'primereact/card';
 
 // Box component
-const Box = ({ word, handleClick, isSelected, isSolved }) => {
+const Box = ({ word, handleClick, isSelected, isSolved, isSolution }) => {
     return (
         <Card
             title={word}
-            className={`box ${isSelected ? 'selected' : ''} ${isSolved ? 'solved' : ''}`}
+            className={`box ${isSelected ? 'selected' : ''} ${isSolved ? 'solved' : ''} ${isSolution ? 'solution' : ''}`}
             onClick={handleClick}
             style={{ pointerEvents: isSolved ? 'none' : 'auto' }} // Prevent interaction if solved
         />
     );
 };
+
 
 // Connection component
 const Connection = ({ connection, solution }) => {
@@ -32,7 +33,7 @@ const Game = () => {
     // Define the correct groups of words and their solutions
     const correctGroups = [
         { words: ['Scotty', 'Kuscheln', 'Mais', 'Discounter'], solution: 'Beamer' },
-        { words: ['Chef', 'Schwer', 'Kartoffeln', 'Griff'], solution: 'Pfanne' },
+        { words: ['Chef', 'Heiß', 'Kartoffel', 'Griff'], solution: 'Bratpfanne' },
         { words: ['Expedition', 'Tragen', 'Berg', 'Riegel'], solution: 'Rucksack' },
         { words: ['Komfort', 'Sitzen', 'Sport', 'Fahren'], solution: 'Radlerhose' }
     ];
@@ -144,24 +145,30 @@ const Game = () => {
     }, [selectedWords]);
 
     return (
-        <div className="wrapContainer">
-            <div className="game-container">
-                <div className="game">
-                    {grid.map((row, rowIndex) => (
-                        <div key={rowIndex} className="row">
-                            {row.map((word, colIndex) => (
-                                <Box
-                                    key={`${rowIndex}-${colIndex}`}
-                                    word={word}
-                                    handleClick={() => !solvedWords.includes(word) && handleWordClick(word)}
-                                    isSelected={selectedWords[word]}
-                                    isSolved={solvedWords.includes(word)}
-                                />
-                            ))}
-                        </div>
-                    ))}
-                </div>
-            </div>
+        <div className="wrapContainer"><div className="game">
+    {grid.map((row, rowIndex) => (
+        <div key={rowIndex} className="row">
+            {solvedWords.includes(row[0]) ? ( // Check if the first word of the row is in solvedWords
+                <Box
+                    word={connections.find(conn => conn.words.sort().join('-') === row.sort().join('-')).solution}
+                    isSolution={true}
+                    key={rowIndex}
+                />
+            ) : (
+                row.map((word, colIndex) => (
+                    <Box
+                        key={`${rowIndex}-${colIndex}`}
+                        word={word}
+                        handleClick={() => !solvedWords.includes(word) && handleWordClick(word)}
+                        isSelected={selectedWords[word]}
+                        isSolved={solvedWords.includes(word)}
+                    />
+                ))
+            )}
+        </div>
+    ))}
+</div>
+
             <div className="button-container">
                 <button onClick={createConnection} disabled={isButtonDisabled}>EINLOGGEN</button>
             </div>
