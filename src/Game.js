@@ -32,11 +32,12 @@ const Connection = ({ connection, solution }) => {
 const Game = () => {
     // Define the correct groups of words and their solutions
     const correctGroups = [
-        { words: ['Scotty', 'Kuscheln', 'Mais', 'Discounter'], solution: 'Beamer' },
-        { words: ['Chef', 'Heiß', 'Kartoffel', 'Griff'], solution: 'Bratpfanne' },
-        { words: ['Expedition', 'Tragen', 'Berg', 'Riegel'], solution: 'Rucksack' },
-        { words: ['Komfort', 'Sitzen', 'Sport', 'Fahren'], solution: 'Radlerhose' }
+        { words: ['Scotty', 'Kuscheln', 'Mais', 'Discounter'], solution: 'STERNE' },
+        { words: ['Chef', 'Hothothot', 'Kartoffel', 'Griff'], solution: 'BOGEN' },
+        { words: ['Expedition', 'Rexroth', 'Berg', 'Fell'], solution: 'BALLON' },
+        { words: ['Komfort', 'Sitzen', 'Urlaub', 'Treten'], solution: 'WEIHNACHTEN' }
     ];
+    const [lives, setLives] = useState(4);
 
     // Initialize state for tracking selected words, connections, and solution
     const [grid, setGrid] = useState([]);
@@ -96,47 +97,68 @@ const Game = () => {
 
     // Function to create connection
     const createConnection = () => {
-    const selectedGroup = Object.keys(selectedWords).filter(word => selectedWords[word]).sort();
-    const selectedGroupString = selectedGroup.join('-');
+        const selectedGroup = Object.keys(selectedWords).filter(word => selectedWords[word]).sort();
+        const selectedGroupString = selectedGroup.join('-');
 
-    if (selectedGroup.length === 4 && selectedGroupString in solutions) {
-        const newConnections = [...connections, { words: selectedGroup, solution: solutions[selectedGroupString] }];
-        setConnections(newConnections);
+        if (selectedGroup.length === 4) {
+            const matchCount = countMatches(selectedGroup);
+            if (matchCount == 4) {
+                const newConnections = [...connections, { words: selectedGroup, solution: solutions[selectedGroupString] }];
+                setConnections(newConnections);
 
-        const newSolvedWords = [...solvedWords, ...selectedGroup];
-        setSolvedWords(newSolvedWords);
+                const newSolvedWords = [...solvedWords, ...selectedGroup];
+                setSolvedWords(newSolvedWords);
 
-        // Remove solved words from the grid and shuffle the remaining
-        let remainingWords = grid.flat().filter(word => !newSolvedWords.includes(word));
-        remainingWords = shuffleArray(remainingWords);
+                // Remove solved words from the grid and shuffle the remaining
+                let remainingWords = grid.flat().filter(word => !newSolvedWords.includes(word));
+                remainingWords = shuffleArray(remainingWords);
 
-        // Create new grid with solved words at the top
-        const newGrid = [];
-        newConnections.forEach(connection => {
-            newGrid.push(connection.words); // Add each connection as a new row
+                // Create new grid with solved words at the top
+                const newGrid = [];
+                newConnections.forEach(connection => {
+                    newGrid.push(connection.words); // Add each connection as a new row
+                });
+
+                // Fill in the rest of the grid with remaining words
+                while (remainingWords.length) {
+                    newGrid.push(remainingWords.splice(0, 4));
+                }
+
+                // Ensure the grid always has exactly 4 rows, filling with empty arrays if necessary
+                while (newGrid.length < 4) {
+                    newGrid.push(Array(4).fill('')); // Use empty strings to fill missing spots
+                }
+
+                setGrid(newGrid);
+                setSelectedWords({}); // Clear selected words
+                return;
+
+            } else {
+
+                if (lives > 1) {
+                    setLives(lives - 1);
+                } else {
+                    alert('Oooohhh leider verloren. Mit nem Refresh kannst du es nochmal versuchen...');
+                    return;
+                }
+                if (matchCount === 3) {
+                    alert("Ganz knapp! Drei passen zusammen!");
+                }
+            }
+        }
+
+        alert('Leider faaaalsch, versuch es doch noch ein Mal! :*');
+        setSelectedWords({});
+    };
+
+    function countMatches(selectedGroup) {
+        let maxMatch = 0;
+        correctGroups.forEach(group => {
+            const matches = group.words.filter(word => selectedGroup.includes(word)).length;
+            if (matches > maxMatch) maxMatch = matches;
         });
-
-        // Fill in the rest of the grid with remaining words
-        while (remainingWords.length) {
-            newGrid.push(remainingWords.splice(0, 4));
-        }
-
-        // Ensure the grid always has exactly 4 rows, filling with empty arrays if necessary
-        while (newGrid.length < 4) {
-            newGrid.push(Array(4).fill('')); // Use empty strings to fill missing spots
-        }
-
-        setGrid(newGrid);
-        setSelectedWords({}); // Clear selected words
-        return;
+        return maxMatch;
     }
-
-    alert('Leider nein, versuch es doch noch ein Mal!');
-    setSelectedWords({});
-};
-
-
-
 
     // Update the useEffect dependency to track selectedWords changes
     useEffect(() => {
@@ -168,6 +190,10 @@ const Game = () => {
         </div>
     ))}
 </div>
+            <div className="lives-container">
+                {Array.from({ length: lives }, (_, i) => <div key={i} className="life" />)}
+            </div>
+
 
             <div className="button-container">
                 <button onClick={createConnection} disabled={isButtonDisabled}>EINLOGGEN</button>
